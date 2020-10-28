@@ -15,7 +15,7 @@ class FilebeatLoggingServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        Config::set('logging.filebeat', [
+        Config::set('logging.channels.filebeat', [
             'driver'  => 'custom',
             'channel' => sprintf('%s - %s', env('APP_NAME'), env('APP_ENV')),
             'via'     => FilebeatLoggerFactory::class
