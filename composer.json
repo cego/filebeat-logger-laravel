@@ -1,0 +1,38 @@
+{
+    "name": "cego/filebeat-logger-laravel",
+    "description": "Filebeat logging for Laravel",
+    "type": "library",
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "authors": [
+        {
+            "name": "Nikolaj Boel Jensen",
+            "email": "nbj@creationsftw.com"
+        },
+        {
+            "name": "Ole Kallehave",
+            "email": "ok@cego.dk"
+        }
+    ],
+    "require": {
+        "cego/filebeat-logger": "^0.0",
+        "illuminate/support": "^7.0|^8.0"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Cego\\": "src/"
+        }
+    },
+    "autoload-dev": {},
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Cego\\FilebeatLogging\\FilebeatLoggingServiceProvider"
+            ]
+        }
+    }
+}
