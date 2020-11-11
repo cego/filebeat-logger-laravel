@@ -4,4 +4,4 @@ parameters:
     ignoreErrors:
         - "#Call to an undefined static method#"
         - "#Call to an undefined method#"
-        - "#App\\Exceptions\\Handler#"
+        - "#Handler not found#"
