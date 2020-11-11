@@ -5,4 +5,4 @@ parameters:
         - "#Call to an undefined static method#"
         - "#Call to an undefined method#"
     excludes_analyse:
-    		- src/FilebeatLogging/LoggerExceptionHandler.php
+        - src/FilebeatLogging/LoggerExceptionHandler.php
