@@ -22,6 +22,7 @@ class FilebeatLoggingServiceProvider extends ServiceProvider
             'via'     => FilebeatLoggerFactory::class
         ]);
 
+        /* @phpstan-ignore-next-line */
         $this->app->bind(ExceptionHandler::class, LoggerExceptionHandler::class);
     }
 }
