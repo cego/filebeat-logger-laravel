@@ -1,3 +1,6 @@
 parameters:
+    checkMissingIterableValueType: false
+    reportUnmatchedIgnoredErrors: false
     ignoreErrors:
-        - "#App\Exceptions\Handler#"
+        - "#Call to an undefined static method#"
+        - "#Call to an undefined method#"
