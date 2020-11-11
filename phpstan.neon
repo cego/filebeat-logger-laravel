@@ -4,4 +4,5 @@ parameters:
     ignoreErrors:
         - "#Call to an undefined static method#"
         - "#Call to an undefined method#"
-        - "#Handler not found#"
+    excludes_analyse:
+    		- src/FilebeatLogging/LoggerExceptionHandler.php
