@@ -5,6 +5,7 @@ namespace Cego\FilebeatLogging;
 use Cego\FilebeatLoggerFactory;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Contracts\Debug\ExceptionHandler;
 
 class FilebeatLoggingServiceProvider extends ServiceProvider
 {
@@ -20,5 +21,7 @@ class FilebeatLoggingServiceProvider extends ServiceProvider
             'channel' => sprintf('%s - %s', env('APP_NAME'), env('APP_ENV')),
             'via'     => FilebeatLoggerFactory::class
         ]);
+
+        $this->app->bind(ExceptionHandler::class, LoggerExceptionHandler::class);
     }
 }
