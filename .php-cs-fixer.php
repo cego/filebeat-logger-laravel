@@ -3,7 +3,7 @@
 $finder = PhpCsFixer\Finder::create()
     ->in(__DIR__ . '/src');
 
-return PhpCsFixer\Config::create()
+return (new PhpCsFixer\Config)
     ->setRules([
         '@PSR2'                            => true,
         'no_blank_lines_after_phpdoc'      => true,
@@ -14,22 +14,22 @@ return PhpCsFixer\Config::create()
         'phpdoc_scalar'                    => true,
         'phpdoc_separation'                => true,
         'whitespace_after_comma_in_array'  => true,
-        'method_separation'                => true,
+        'class_attributes_separation'      => true,
         'not_operator_with_space'          => true,
-        'no_extra_consecutive_blank_lines' => [
+        'no_extra_blank_lines' => [
             'tokens' => ['extra']
         ],
         'concat_space' => [
             'spacing' => 'one'
         ],
         'binary_operator_spaces' => [
-            'align_double_arrow' => true
+            'default' => 'align'
         ],
         'blank_line_before_statement' => [
             'statements' => ['break', 'continue', 'declare', 'return', 'throw', 'try', 'foreach', 'if', 'switch', 'do', 'while']
         ],
         'ordered_imports' => [
-            'sortAlgorithm' => 'length'
+            'sort_algorithm' => 'length'
         ]
     ])
     ->setFinder($finder);
