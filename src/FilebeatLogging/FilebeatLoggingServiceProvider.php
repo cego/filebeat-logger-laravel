@@ -19,6 +19,7 @@ class FilebeatLoggingServiceProvider extends ServiceProvider
         Config::set('logging.channels.filebeat', [
             'driver'  => 'custom',
             'channel' => sprintf('%s - %s', env('APP_NAME'), env('APP_ENV')),
+            'stream'  => env('FILEBEAT_LOGGER_STREAM', 'php://stdout'),
             'via'     => FilebeatLoggerFactory::class
         ]);
 
