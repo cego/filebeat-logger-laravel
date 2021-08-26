@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2b4082aba41135d1b455d641a4722876",
+    "content-hash": "5aa265252612b7f0194a33216eb2a46c",
     "packages": [
         {
             "name": "cego/filebeat-logger",
-            "version": "1.0.1",
+            "version": "dev-niza/add-stream-to-config",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cego/filebeat-logger-php.git",
-                "reference": "2232250927dd6189acf57d5bddabd0b43e6a5ece"
+                "reference": "c1d6440ea9c0cfe76c53c6028b0e12c41c046874"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cego/filebeat-logger-php/zipball/2232250927dd6189acf57d5bddabd0b43e6a5ece",
-                "reference": "2232250927dd6189acf57d5bddabd0b43e6a5ece",
+                "url": "https://api.github.com/repos/cego/filebeat-logger-php/zipball/c1d6440ea9c0cfe76c53c6028b0e12c41c046874",
+                "reference": "c1d6440ea9c0cfe76c53c6028b0e12c41c046874",
                 "shasum": ""
             },
             "require": {
@@ -41,9 +41,9 @@
             "description": "Package for logging php enriched json lines that filebeat can collect",
             "support": {
                 "issues": "https://github.com/cego/filebeat-logger-php/issues",
-                "source": "https://github.com/cego/filebeat-logger-php/tree/1.0.1"
+                "source": "https://github.com/cego/filebeat-logger-php/tree/niza/add-stream-to-config"
             },
-            "time": "2021-06-02T07:02:05+00:00"
+            "time": "2021-08-26T06:10:39+00:00"
         },
         {
             "name": "composer/ca-bundle",
@@ -2990,12 +2990,14 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "cego/filebeat-logger": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": "^7.1|^8.0"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "2.1.0"
 }

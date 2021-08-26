@@ -17,7 +17,7 @@
     ],
     "require": {
         "php": "^7.1|^8.0",
-        "cego/filebeat-logger": "^1.0",
+        "cego/filebeat-logger": "dev-niza/add-stream-to-config",
         "illuminate/support": "^7.0|^8.0",
         "illuminate/contracts": "^7.0|^8.0"
     },
