@@ -2,6 +2,7 @@
 
 namespace Cego\FilebeatLogging;
 
+use JsonException;
 use Cego\FilebeatLoggerFactory;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
@@ -12,6 +13,8 @@ class FilebeatLoggingServiceProvider extends ServiceProvider
     /**
      * Register any application services.
      *
+     * @throws JsonException
+     *
      * @return void
      */
     public function register(): void
@@ -19,6 +22,7 @@ class FilebeatLoggingServiceProvider extends ServiceProvider
         Config::set('logging.channels.filebeat', [
             'driver'   => 'custom',
             'channel'  => 'filebeat',
+            'extras'   => json_decode(env('FILEBEAT_LOGGER_EXTRAS', '{}'), $assoc = true, $depth = 512, JSON_THROW_ON_ERROR),
             'stream'   => env('FILEBEAT_LOGGER_STREAM', 'php://stdout'),
             'rotating' => env('FILEBEAT_LOGGER_ROTATING', false),
             'via'      => FilebeatLoggerFactory::class,
