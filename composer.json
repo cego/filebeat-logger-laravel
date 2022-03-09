@@ -28,7 +28,10 @@
     "autoload": {
         "psr-4": {
             "Cego\\": "src/"
-        }
+        },
+        "files": [
+            "src/FilebeatLogging/bootstrap.php"
+        ]
     },
     "autoload-dev": {},
     "extra": {
