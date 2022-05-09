@@ -26,6 +26,7 @@ class FilebeatLoggingServiceProvider extends ServiceProvider
             'stream'   => env('FILEBEAT_LOGGER_STREAM', 'php://stdout'),
             'rotating' => env('FILEBEAT_LOGGER_ROTATING', false),
             'via'      => FilebeatLoggerFactory::class,
+            'level'    => env('LOG_LEVEL', 'debug'),
         ]);
 
         /* @phpstan-ignore-next-line */
