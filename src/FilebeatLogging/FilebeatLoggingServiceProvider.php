@@ -23,7 +23,7 @@ class FilebeatLoggingServiceProvider extends ServiceProvider
             'driver'   => 'custom',
             'channel'  => 'filebeat',
             'extras'   => json_decode(env('FILEBEAT_LOGGER_EXTRAS', '{}'), $assoc = true, $depth = 512, JSON_THROW_ON_ERROR),
-            'stream'   => env('FILEBEAT_LOGGER_STREAM', 'php://stdout'),
+            'stream'   => env('FILEBEAT_LOGGER_STREAM', 'php://stderr'),
             'rotating' => env('FILEBEAT_LOGGER_ROTATING', false),
             'via'      => FilebeatLoggerFactory::class,
         ]);
