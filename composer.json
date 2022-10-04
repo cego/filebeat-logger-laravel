@@ -23,7 +23,7 @@
         "ext-json": "*"
     },
     "require-dev": {
-        "cego/php-cs-fixer": "0.1.5"
+        "cego/php-cs-fixer": "1.0.0"
     },
     "autoload": {
         "psr-4": {
