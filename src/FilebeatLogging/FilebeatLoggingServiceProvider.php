@@ -4,6 +4,7 @@ namespace Cego\FilebeatLogging;
 
 use JsonException;
 use Cego\FilebeatLoggerFactory;
+use Monolog\Handler\ProcessHandler;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Contracts\Debug\ExceptionHandler;
@@ -20,9 +21,13 @@ class FilebeatLoggingServiceProvider extends ServiceProvider
     public function register(): void
     {
         Config::set('logging.channels.filebeat', [
-            'driver'   => 'custom',
-            'channel'  => 'filebeat',
-            'extras'   => json_decode(env('FILEBEAT_LOGGER_EXTRAS', '{}'), $assoc = true, $depth = 512, JSON_THROW_ON_ERROR),
+            'driver'  => 'custom',
+            'channel' => 'filebeat',
+            'extras'  => json_decode(env('FILEBEAT_LOGGER_EXTRAS', '{}'), $assoc = true, $depth = 512, JSON_THROW_ON_ERROR),
+            'with'    => [
+                'command' => 'cat >> /proc/1/fd/1',
+            ],
+            'handler'  => ProcessHandler::class,
             'stream'   => env('FILEBEAT_LOGGER_STREAM', 'php://stdout'),
             'rotating' => env('FILEBEAT_LOGGER_ROTATING', false),
             'via'      => FilebeatLoggerFactory::class,
