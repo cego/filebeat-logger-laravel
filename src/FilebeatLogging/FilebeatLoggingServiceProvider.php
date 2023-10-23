@@ -30,10 +30,7 @@ class FilebeatLoggingServiceProvider extends ServiceProvider
         ];
 
         if($this->isOctane()) {
-            $config['handler'] = ProcessHandler::class;
-            $config['with'] = [
-                'command' => 'cat >> /proc/1/fd/1',
-            ];
+            $config['handler'] = new ProcessHandler('cat >> /proc/1/fd/1');
         }
 
         Config::set('logging.channels.filebeat', $config);
