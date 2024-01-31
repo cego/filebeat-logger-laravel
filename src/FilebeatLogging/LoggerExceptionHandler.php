@@ -2,6 +2,7 @@
 
 namespace Cego\FilebeatLogging;
 
+use Illuminate\Support\Facades\Log;
 use Throwable;
 use App\Exceptions\Handler;
 
@@ -17,6 +18,7 @@ class LoggerExceptionHandler extends Handler
     public function renderForConsole($output, Throwable $e): void
     {
         if ($this->isQuiet()) {
+            Log::error($e->getMessage(),['exception' => $e]);
             return;
         }
 
