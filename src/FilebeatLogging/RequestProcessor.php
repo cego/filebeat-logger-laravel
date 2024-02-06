@@ -9,26 +9,24 @@ use DeviceDetector\DeviceDetector;
 use DeviceDetector\Cache\LaravelCache;
 use Monolog\Processor\ProcessorInterface;
 
-class FilebeatHttpContextProcessor implements ProcessorInterface
+class RequestProcessor implements ProcessorInterface
 {
     public function __invoke(LogRecord $record): LogRecord
     {
         // Get the PSR7 request from the laravel container
-        dd("wat");
         /** @var ?Request $request */
         $request = app('request'); // TODO test if we need to check if it is bound first.
 
-        dd($request);
         if($request === null) {
             return $record;
         }
 
         $record->extra = array_merge(
             $record->extra,
-            self::httpExtras($request),
-            self::urlExtras($request),
-            self::userAgentExtras($request),
-            self::clientExtras($request)
+            ['http'       => self::httpExtras($request)],
+            ['url'        => self::urlExtras($request)],
+            ['user_agent' => self::userAgentExtras($request)],
+            ['client'     => self::clientExtras($request)]
         );
 
         return $record;
