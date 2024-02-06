@@ -98,8 +98,11 @@ class RequestProcessor implements ProcessorInterface
                 'version' => $deviceDetector->getOs('version'),
             ],
             'device' => [
-                'brand' => $deviceDetector->getBrandName(),
-                'model' => $deviceDetector->getModel(),
+                'isMobile'  => $deviceDetector->isMobile(),
+                'isDesktop' => $deviceDetector->isDesktop(),
+                'isBot'     => $deviceDetector->isBot(),
+                'brand'     => $deviceDetector->getBrandName(),
+                'model'     => $deviceDetector->getModel(),
             ],
         ];
     }
