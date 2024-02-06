@@ -13,9 +13,12 @@ class RequestProcessor implements ProcessorInterface
 {
     public function __invoke(LogRecord $record): LogRecord
     {
-        // Get the PSR7 request from the laravel container
+        if(app()->runningInConsole()) {
+            return $record;
+        }
+
         /** @var ?Request $request */
-        $request = app('request'); // TODO test if we need to check if it is bound first.
+        $request = app('request');
 
         if($request === null) {
             return $record;
