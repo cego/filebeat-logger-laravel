@@ -21,12 +21,13 @@ class FilebeatLoggingServiceProvider extends ServiceProvider
     public function register(): void
     {
         $config = [
-            'driver'   => 'custom',
-            'channel'  => 'filebeat',
-            'extras'   => json_decode(env('FILEBEAT_LOGGER_EXTRAS', '{}'), $assoc = true, $depth = 512, JSON_THROW_ON_ERROR),
-            'stream'   => env('FILEBEAT_LOGGER_STREAM', 'php://stdout'),
-            'rotating' => env('FILEBEAT_LOGGER_ROTATING', false),
-            'via'      => FilebeatLoggerFactory::class,
+            'driver'               => 'custom',
+            'channel'              => 'filebeat',
+            'extras'               => json_decode(env('FILEBEAT_LOGGER_EXTRAS', '{}'), associative: true, flags: JSON_THROW_ON_ERROR),
+            'stream'               => env('FILEBEAT_LOGGER_STREAM', 'php://stdout'),
+            'rotating'             => env('FILEBEAT_LOGGER_ROTATING', false),
+            'httpContextProcessor' => new RequestProcessor(),
+            'via'                  => FilebeatLoggerFactory::class,
         ];
 
         if($this->isOctane()) {
