@@ -26,7 +26,7 @@ class FilebeatLoggingServiceProvider extends ServiceProvider
             'extras'               => json_decode(env('FILEBEAT_LOGGER_EXTRAS', '{}'), associative: true, flags: JSON_THROW_ON_ERROR),
             'stream'               => env('FILEBEAT_LOGGER_STREAM', 'php://stdout'),
             'rotating'             => env('FILEBEAT_LOGGER_ROTATING', false),
-            'httpContextProcessor' => new RequestProcessor(),
+            'httpContextProcessor' => RequestProcessor::class,
             'via'                  => FilebeatLoggerFactory::class,
         ];
 
