@@ -2,8 +2,8 @@
 
 namespace Cego\FilebeatLogging;
 
+use Illuminate\Foundation\Exceptions\Handler;
 use Throwable;
-use App\Exceptions\Handler;
 
 class LoggerExceptionHandler extends Handler
 {
