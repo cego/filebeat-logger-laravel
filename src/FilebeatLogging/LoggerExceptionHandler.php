@@ -3,7 +3,7 @@
 namespace Cego\FilebeatLogging;
 
 use Throwable;
-use App\Exceptions\Handler;
+use Illuminate\Foundation\Exceptions\Handler;
 
 class LoggerExceptionHandler extends Handler
 {
