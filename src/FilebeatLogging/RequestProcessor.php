@@ -38,7 +38,7 @@ class RequestProcessor implements ProcessorInterface
     private static function clientExtras(Request $request): array
     {
         return [
-            'ip'      => $request->header('CF-Connecting-IP') ?? $request->getClientIp(),
+            'ip'      => $request->getClientIp(),
             'address' => $request->header('X-Forwarded-For'),
             'geo'     => [
                 'country_iso_code' => $request->header('CF-IPCountry'),
