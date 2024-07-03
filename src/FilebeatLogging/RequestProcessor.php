@@ -6,7 +6,6 @@ use Monolog\LogRecord;
 use Illuminate\Http\Request;
 use DeviceDetector\ClientHints;
 use DeviceDetector\DeviceDetector;
-use DeviceDetector\Cache\LaravelCache;
 use Monolog\Processor\ProcessorInterface;
 
 class RequestProcessor implements ProcessorInterface
@@ -83,7 +82,7 @@ class RequestProcessor implements ProcessorInterface
         $clientHints = ClientHints::factory($headers);
 
         $deviceDetector = new DeviceDetector($userAgent, $clientHints);
-        $deviceDetector->setCache(new LaravelCache());
+        $deviceDetector->setCache(new ApcuCache());
 
         $deviceDetector->parse();
 
