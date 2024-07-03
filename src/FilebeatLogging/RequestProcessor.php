@@ -6,7 +6,6 @@ use Monolog\LogRecord;
 use Illuminate\Http\Request;
 use DeviceDetector\ClientHints;
 use DeviceDetector\DeviceDetector;
-use DeviceDetector\Cache\LaravelCache;
 use Monolog\Processor\ProcessorInterface;
 
 class RequestProcessor implements ProcessorInterface
