@@ -12,7 +12,8 @@
         "illuminate/contracts": "^11.0",
         "ext-json": "*",
         "illuminate/http": "^11.0",
-        "matomo/device-detector": "^6.2"
+        "matomo/device-detector": "^6.2",
+        "ext-apcu": "*"
     },
     "require-dev": {
         "cego/php-cs-fixer": "2.0.0"
