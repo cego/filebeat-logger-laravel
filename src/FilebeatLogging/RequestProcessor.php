@@ -12,14 +12,14 @@ class RequestProcessor implements ProcessorInterface
 {
     public function __invoke(LogRecord $record): LogRecord
     {
-        if(app()->runningInConsole()) {
+        if (app()->runningInConsole()) {
             return $record;
         }
 
         /** @var ?Request $request */
         $request = app('request');
 
-        if($request === null) {
+        if ($request === null) {
             return $record;
         }
 
@@ -89,11 +89,11 @@ class RequestProcessor implements ProcessorInterface
     {
         $userAgent = $request->header('User-Agent');
 
-        if(is_array($userAgent)) {
+        if (is_array($userAgent)) {
             $userAgent = $userAgent[0] ?? null;
         }
 
-        if($userAgent === null) {
+        if ($userAgent === null) {
             return [];
         }
 
