@@ -31,7 +31,6 @@ class FilebeatLoggingServiceProvider extends ServiceProvider
 
         Config::set('logging.channels.filebeat', $config);
 
-        /* @phpstan-ignore-next-line */
         $this->app->bind(ExceptionHandler::class, LoggerExceptionHandler::class);
     }
 }
