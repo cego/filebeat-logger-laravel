@@ -16,7 +16,9 @@
         "ext-apcu": "*"
     },
     "require-dev": {
-        "cego/php-cs-fixer": "2.0.0"
+        "cego/php-cs-fixer": "2.0.0",
+        "cego/phpstan": "^4",
+        "laravel/framework": "^11.41"
     },
     "autoload": {
         "psr-4": {

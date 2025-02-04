@@ -34,6 +34,11 @@ class RequestProcessor implements ProcessorInterface
         return $record;
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return array<array-key, mixed>
+     */
     private static function clientExtras(Request $request): array
     {
         return [
@@ -45,6 +50,11 @@ class RequestProcessor implements ProcessorInterface
         ];
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return array<array-key, mixed>
+     */
     private static function httpExtras(Request $request): array
     {
         return [
@@ -55,6 +65,11 @@ class RequestProcessor implements ProcessorInterface
         ];
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return array<array-key, mixed>
+     */
     private static function urlExtras(Request $request): array
     {
         return [
@@ -65,9 +80,18 @@ class RequestProcessor implements ProcessorInterface
         ];
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return array<array-key, mixed>
+     */
     private static function userAgentExtras(Request $request): array
     {
         $userAgent = $request->header('User-Agent');
+
+        if(is_array($userAgent)) {
+            $userAgent = $userAgent[0] ?? null;
+        }
 
         if($userAgent === null) {
             return [];
@@ -91,6 +115,7 @@ class RequestProcessor implements ProcessorInterface
             'browser'  => [
                 'name'    => $deviceDetector->getClient('name'),
                 'version' => $deviceDetector->getClient('version'),
+                'isApp'   => strpos($userAgent, 'PlategoApp') !== false,
             ],
             'os' => [
                 'name'    => $deviceDetector->getOs('name'),
