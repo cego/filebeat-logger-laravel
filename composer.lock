@@ -137,26 +137,30 @@
         },
         {
             "name": "cego/filebeat-logger",
-            "version": "2.0.6",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cego/filebeat-logger-php.git",
-                "reference": "1db2f1b063d975199a6134ddea5e559c18f82139"
+                "reference": "948e77e06bc8f890e48917aabd039b840d067115"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cego/filebeat-logger-php/zipball/1db2f1b063d975199a6134ddea5e559c18f82139",
-                "reference": "1db2f1b063d975199a6134ddea5e559c18f82139",
+                "url": "https://api.github.com/repos/cego/filebeat-logger-php/zipball/948e77e06bc8f890e48917aabd039b840d067115",
+                "reference": "948e77e06bc8f890e48917aabd039b840d067115",
                 "shasum": ""
             },
             "require": {
                 "monolog/monolog": "3.x.x",
+                "nesbot/carbon": "^3.9",
                 "php": "8.x.x",
                 "ua-parser/uap-php": "3.x.x"
             },
             "require-dev": {
-                "cego/php-cs-fixer": "1.x.x",
-                "phpstan/phpstan": "1.x.x"
+                "cego/php-cs-fixer": "^2",
+                "nyholm/psr7": "^1.8",
+                "open-telemetry/sdk": "^1.8",
+                "phpstan/phpstan": "^2",
+                "symfony/http-client": "^7.3"
             },
             "type": "project",
             "autoload": {
@@ -170,9 +174,9 @@
             ],
             "description": "Package for logging php enriched json lines that filebeat can collect",
             "support": {
-                "source": "https://github.com/cego/filebeat-logger-php/tree/2.0.6"
+                "source": "https://github.com/cego/filebeat-logger-php/tree/2.1.0"
             },
-            "time": "2024-02-19T13:07:14+00:00"
+            "time": "2025-09-30T12:10:08+00:00"
         },
         {
             "name": "composer/ca-bundle",
