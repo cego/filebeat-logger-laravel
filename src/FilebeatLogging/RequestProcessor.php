@@ -57,6 +57,8 @@ class RequestProcessor implements ProcessorInterface
      */
     private static function httpExtras(Request $request): array
     {
+        $allowedHeaders = collect(['CF-Ray']);
+
         return [
             'request' => [
                 'id'     => $request->header('CF-RAY'),
