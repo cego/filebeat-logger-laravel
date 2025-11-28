@@ -61,6 +61,13 @@ class RequestProcessor implements ProcessorInterface
             'request' => [
                 'id'     => $request->header('CF-RAY'),
                 'method' => $request->getMethod(),
+                    $allowedHeaders->reduce(function ($carry, $headerName) use ($request) {
+                        if (($headerValue = $request->header($headerName)) !== null) {
+                            $carry[$headerName] = $headerValue;
+                        }
+
+                        return $carry;
+                    }, []),
             ],
         ];
     }
