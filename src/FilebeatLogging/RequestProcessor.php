@@ -114,8 +114,14 @@ class RequestProcessor implements ProcessorInterface
 
         $clientHints = ClientHints::factory($headers);
 
+        $sapi = php_sapi_name();
+        $isClassic = in_array($sapi, ['apache2handler', 'fpm-fcgi']);
+
         $deviceDetector = new DeviceDetector($userAgent, $clientHints);
 
+        if ($isClassic && extension_loaded('apcu') && ini_get('apc.enabled')) {
+            $deviceDetector->setCache(new ApcuCache());
+        }
         $deviceDetector->parse();
 
         return [
