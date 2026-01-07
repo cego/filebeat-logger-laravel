@@ -31,6 +31,10 @@ class FilebeatLoggingServiceProvider extends ServiceProvider
 
         Config::set('logging.channels.filebeat', $config);
 
+        $deprecationsConfig = $config;
+        $deprecationsConfig['via'] = DeprecationLoggerFactory::class;
+        Config::set('logging.channels.deprecations', $deprecationsConfig);
+
         $this->app->bind(ExceptionHandler::class, LoggerExceptionHandler::class);
     }
 }
