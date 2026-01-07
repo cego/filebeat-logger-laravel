@@ -24,4 +24,3 @@ class DeprecationLoggerFactory extends FilebeatLoggerFactory
         return $logger;
     }
 }
-
