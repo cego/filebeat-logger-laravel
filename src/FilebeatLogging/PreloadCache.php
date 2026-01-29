@@ -27,7 +27,7 @@ class PreloadCache implements CacheInterface
         $this->path = app()->bootstrapPath('cache/device-detector.php');
         $this->isWarming = $isWarming;
 
-        if (! $isWarming && file_exists($this->path)) {
+        if ( ! $isWarming && file_exists($this->path)) {
             $this->data = require $this->path;
         }
     }
