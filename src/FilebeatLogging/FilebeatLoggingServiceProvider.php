@@ -11,6 +11,20 @@ use Illuminate\Contracts\Debug\ExceptionHandler;
 class FilebeatLoggingServiceProvider extends ServiceProvider
 {
     /**
+     * Bootstrap any application services.
+     *
+     * @return void
+     */
+    public function boot(): void
+    {
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                CacheCommand::class,
+            ]);
+        }
+    }
+
+    /**
      * Register any application services.
      *
      * @throws JsonException
