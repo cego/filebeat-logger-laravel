@@ -27,8 +27,6 @@ class CacheCommand extends Command
      */
     public function handle(): int
     {
-        $this->info('Warming DeviceDetector cache...');
-
         PreloadCache::warm();
 
         return 0;
