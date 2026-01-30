@@ -10,28 +10,19 @@ class PreloadCache implements CacheInterface
     /**
      * @var array<string, mixed>
      */
-    private array $data = [];
+    private static array $data = [];
 
     /**
      * @var string
      */
     private string $path;
 
-    /**
-     * @var bool
-     */
-    private bool $isWarming;
-
-    /**
-     * @param bool $isWarming
-     */
-    public function __construct(bool $isWarming = false)
+    public function __construct()
     {
         $this->path = app()->bootstrapPath('cache/device-detector.php');
-        $this->isWarming = $isWarming;
 
-        if ( ! $isWarming && file_exists($this->path)) {
-            $this->data = require $this->path;
+        if (empty(self::$data) && file_exists($this->path)) {
+            self::$data = require $this->path;
         }
     }
 
@@ -42,7 +33,7 @@ class PreloadCache implements CacheInterface
      */
     public function fetch(string $id): mixed
     {
-        return $this->data[$id] ?? null;
+        return self::$data[$id] ?? null;
     }
 
     /**
@@ -52,7 +43,7 @@ class PreloadCache implements CacheInterface
      */
     public function contains(string $id): bool
     {
-        return array_key_exists($id, $this->data);
+        return array_key_exists($id, self::$data);
     }
 
     /**
@@ -64,13 +55,9 @@ class PreloadCache implements CacheInterface
      */
     public function save(string $id, $data, int $lifeTime = 0): bool
     {
-        if ($this->isWarming) {
-            $this->data[$id] = $data;
+        self::$data[$id] = $data;
 
-            return true;
-        }
-
-        return false;
+        return true;
     }
 
     /**
@@ -80,7 +67,7 @@ class PreloadCache implements CacheInterface
      */
     public function delete(string $id): bool
     {
-        unset($this->data[$id]);
+        unset(self::$data[$id]);
 
         return true;
     }
@@ -90,21 +77,9 @@ class PreloadCache implements CacheInterface
      */
     public function flushAll(): bool
     {
-        $this->data = [];
+        self::$data = [];
 
         return true;
-    }
-
-    /**
-     * Persists the cache to disk
-     *
-     * @return void
-     */
-    public function persist(): void
-    {
-        if ($this->isWarming) {
-            file_put_contents($this->path, '<?php return ' . var_export($this->data, true) . ';');
-        }
     }
 
     /**
@@ -112,10 +87,14 @@ class PreloadCache implements CacheInterface
      */
     public static function warm(): void
     {
-        $cache = new self(true);
+        $cache = new self();
         $deviceDetector = new DeviceDetector('WARMING_CACHE_' . uniqid());
         $deviceDetector->setCache($cache);
         $deviceDetector->parse();
-        $cache->persist();
+        file_put_contents($cache->path, '<?php return ' . var_export(self::$data, true) . ';');
+
+        if (function_exists('opcache_compile_file')) {
+            opcache_compile_file($cache->path);
+        }
     }
 }

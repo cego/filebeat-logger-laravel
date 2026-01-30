@@ -5,6 +5,7 @@ namespace Cego\FilebeatLogging;
 use JsonException;
 use Cego\FilebeatLoggerFactory;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 
@@ -22,6 +23,10 @@ class FilebeatLoggingServiceProvider extends ServiceProvider
                 CacheCommand::class,
             ]);
         }
+
+        Event::listen('Laravel\Octane\Events\WorkerStarting', function () {
+            new PreloadCache();
+        });
     }
 
     /**
