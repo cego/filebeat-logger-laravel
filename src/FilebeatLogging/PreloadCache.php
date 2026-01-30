@@ -12,7 +12,10 @@ class PreloadCache implements CacheInterface
      */
     private array $data = [];
 
-    public readonly string $path;
+    /**
+     * @var string
+     */
+    private string $path;
 
     /**
      * @var bool
