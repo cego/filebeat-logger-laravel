@@ -19,7 +19,7 @@ class PreloadCache implements CacheInterface
 
     public function __construct()
     {
-        $this->path = app()->bootstrapPath('cache/device-detector.php');
+        $this->path = sys_get_temp_dir() . '/device-detector-cache.php';
 
         if (empty(self::$data) && file_exists($this->path)) {
             self::$data = require $this->path;
