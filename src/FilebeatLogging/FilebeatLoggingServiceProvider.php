@@ -4,8 +4,8 @@ namespace Cego\FilebeatLogging;
 
 use JsonException;
 use Cego\FilebeatLoggerFactory;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 
