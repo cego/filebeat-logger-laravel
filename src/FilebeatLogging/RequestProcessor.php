@@ -10,19 +10,6 @@ use Monolog\Processor\ProcessorInterface;
 
 class RequestProcessor implements ProcessorInterface
 {
-    private const CLIENT_HINT_HEADERS = [
-        'sec-ch-ua',
-        'sec-ch-ua-mobile',
-        'sec-ch-ua-platform',
-        'sec-ch-ua-platform-version',
-        'sec-ch-ua-full-version-list',
-        'sec-ch-ua-full-version',
-        'sec-ch-ua-model',
-        'sec-ch-ua-arch',
-        'sec-ch-ua-bitness',
-        'sec-ch-ua-wow64',
-    ];
-
     private const CACHE_MAX_ENTRIES = 1024;
 
     /** @var array<string, array<array-key, mixed>> */
@@ -130,7 +117,8 @@ class RequestProcessor implements ProcessorInterface
             return implode(';', $header);
         }, $headers);
 
-        $cacheKey = self::cacheKey($userAgent, $headers);
+        $clientHints = ClientHints::factory($headers);
+        $cacheKey = $userAgent . "\0" . serialize($clientHints);
 
         if (isset(self::$userAgentCache[$cacheKey])) {
             // Move to tail so it counts as most-recently-used.
@@ -140,8 +128,6 @@ class RequestProcessor implements ProcessorInterface
 
             return $cached;
         }
-
-        $clientHints = ClientHints::factory($headers);
 
         $deviceDetector = new DeviceDetector($userAgent, $clientHints);
         $deviceDetector->setCache(new PreloadCache());
@@ -175,24 +161,5 @@ class RequestProcessor implements ProcessorInterface
         self::$userAgentCache[$cacheKey] = $result;
 
         return $result;
-    }
-
-    /**
-     * @param string $userAgent
-     * @param array<string, string> $headers
-     *
-     * @return string
-     */
-    private static function cacheKey(string $userAgent, array $headers): string
-    {
-        $hintBits = '';
-
-        foreach (self::CLIENT_HINT_HEADERS as $name) {
-            if (isset($headers[$name])) {
-                $hintBits .= $name . '=' . $headers[$name] . "\n";
-            }
-        }
-
-        return $userAgent . "\0" . $hintBits;
     }
 }
