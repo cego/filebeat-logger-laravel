@@ -10,6 +10,37 @@ use Monolog\Processor\ProcessorInterface;
 
 class RequestProcessor implements ProcessorInterface
 {
+    /**
+     * Headers inspected by DeviceDetector\ClientHints::factory(). Included in
+     * the parse-result cache key so responses with different client hints do
+     * not collide on the same User-Agent string.
+     */
+    private const CLIENT_HINT_HEADERS = [
+        'sec-ch-ua',
+        'sec-ch-ua-mobile',
+        'sec-ch-ua-platform',
+        'sec-ch-ua-platform-version',
+        'sec-ch-ua-full-version-list',
+        'sec-ch-ua-full-version',
+        'sec-ch-ua-model',
+        'sec-ch-ua-arch',
+        'sec-ch-ua-bitness',
+        'sec-ch-ua-wow64',
+    ];
+
+    private const CACHE_MAX_ENTRIES = 1024;
+
+    /**
+     * Per-worker memoization of userAgentExtras() results keyed on
+     * User-Agent + client-hint headers. A single DeviceDetector::parse()
+     * call costs several milliseconds even with PreloadCache warm, and
+     * this processor runs once per log record — so a request emitting
+     * N log lines pays N parses for the same UA without this cache.
+     *
+     * @var array<string, array<array-key, mixed>>
+     */
+    private static array $userAgentCache = [];
+
     public function __invoke(LogRecord $record): LogRecord
     {
         if (app()->runningInConsole()) {
@@ -112,13 +143,19 @@ class RequestProcessor implements ProcessorInterface
             return implode(';', $header);
         }, $headers);
 
+        $cacheKey = self::cacheKey($userAgent, $headers);
+
+        if (isset(self::$userAgentCache[$cacheKey])) {
+            return self::$userAgentCache[$cacheKey];
+        }
+
         $clientHints = ClientHints::factory($headers);
 
         $deviceDetector = new DeviceDetector($userAgent, $clientHints);
         $deviceDetector->setCache(new PreloadCache());
         $deviceDetector->parse();
 
-        return [
+        $result = [
             'original' => $userAgent,
             'browser'  => [
                 'name'    => $deviceDetector->getClient('name'),
@@ -137,5 +174,31 @@ class RequestProcessor implements ProcessorInterface
                 'model'     => $deviceDetector->getModel(),
             ],
         ];
+
+        if (count(self::$userAgentCache) >= self::CACHE_MAX_ENTRIES) {
+            array_shift(self::$userAgentCache);
+        }
+
+        self::$userAgentCache[$cacheKey] = $result;
+
+        return $result;
+    }
+
+    /**
+     * @param string $userAgent
+     * @param array<string, string> $headers
+     *
+     * @return string
+     */
+    private static function cacheKey(string $userAgent, array $headers): string
+    {
+        $hintBits = '';
+        foreach (self::CLIENT_HINT_HEADERS as $name) {
+            if (isset($headers[$name])) {
+                $hintBits .= $name . '=' . $headers[$name] . "\n";
+            }
+        }
+
+        return $userAgent . "\0" . $hintBits;
     }
 }
