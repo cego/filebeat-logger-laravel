@@ -10,11 +10,6 @@ use Monolog\Processor\ProcessorInterface;
 
 class RequestProcessor implements ProcessorInterface
 {
-    /**
-     * Headers inspected by DeviceDetector\ClientHints::factory(). Included in
-     * the parse-result cache key so responses with different client hints do
-     * not collide on the same User-Agent string.
-     */
     private const CLIENT_HINT_HEADERS = [
         'sec-ch-ua',
         'sec-ch-ua-mobile',
@@ -30,18 +25,7 @@ class RequestProcessor implements ProcessorInterface
 
     private const CACHE_MAX_ENTRIES = 1024;
 
-    /**
-     * Per-worker LRU memoization of userAgentExtras() results keyed on
-     * User-Agent + client-hint headers. A single DeviceDetector::parse()
-     * call costs several milliseconds even with PreloadCache warm, and
-     * this processor runs once per log record — so a request emitting
-     * N log lines pays N parses for the same UA without this cache.
-     *
-     * Ordering relies on PHP arrays preserving insertion order: hits
-     * re-insert at the tail, so array_shift() evicts the least-recently-used.
-     *
-     * @var array<string, array<array-key, mixed>>
-     */
+    /** @var array<string, array<array-key, mixed>> */
     private static array $userAgentCache = [];
 
     public function __invoke(LogRecord $record): LogRecord
