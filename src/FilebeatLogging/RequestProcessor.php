@@ -10,6 +10,11 @@ use Monolog\Processor\ProcessorInterface;
 
 class RequestProcessor implements ProcessorInterface
 {
+    private const CACHE_MAX_ENTRIES = 1024;
+
+    /** @var array<string, array<array-key, mixed>> */
+    private static array $userAgentCache = [];
+
     public function __invoke(LogRecord $record): LogRecord
     {
         if (app()->runningInConsole()) {
@@ -113,12 +118,22 @@ class RequestProcessor implements ProcessorInterface
         }, $headers);
 
         $clientHints = ClientHints::factory($headers);
+        $cacheKey = $userAgent . "\0" . serialize($clientHints);
+
+        if (isset(self::$userAgentCache[$cacheKey])) {
+            // Move to tail so it counts as most-recently-used.
+            $cached = self::$userAgentCache[$cacheKey];
+            unset(self::$userAgentCache[$cacheKey]);
+            self::$userAgentCache[$cacheKey] = $cached;
+
+            return $cached;
+        }
 
         $deviceDetector = new DeviceDetector($userAgent, $clientHints);
         $deviceDetector->setCache(new PreloadCache());
         $deviceDetector->parse();
 
-        return [
+        $result = [
             'original' => $userAgent,
             'browser'  => [
                 'name'    => $deviceDetector->getClient('name'),
@@ -137,5 +152,14 @@ class RequestProcessor implements ProcessorInterface
                 'model'     => $deviceDetector->getModel(),
             ],
         ];
+
+        if (count(self::$userAgentCache) >= self::CACHE_MAX_ENTRIES) {
+            // Oldest entry sits at the head; hits re-insert at the tail, making this LRU eviction.
+            array_shift(self::$userAgentCache);
+        }
+
+        self::$userAgentCache[$cacheKey] = $result;
+
+        return $result;
     }
 }
