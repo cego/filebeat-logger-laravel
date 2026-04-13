@@ -193,6 +193,7 @@ class RequestProcessor implements ProcessorInterface
     private static function cacheKey(string $userAgent, array $headers): string
     {
         $hintBits = '';
+
         foreach (self::CLIENT_HINT_HEADERS as $name) {
             if (isset($headers[$name])) {
                 $hintBits .= $name . '=' . $headers[$name] . "\n";
