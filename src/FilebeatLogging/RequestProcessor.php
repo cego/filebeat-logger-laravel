@@ -31,11 +31,14 @@ class RequestProcessor implements ProcessorInterface
     private const CACHE_MAX_ENTRIES = 1024;
 
     /**
-     * Per-worker memoization of userAgentExtras() results keyed on
+     * Per-worker LRU memoization of userAgentExtras() results keyed on
      * User-Agent + client-hint headers. A single DeviceDetector::parse()
      * call costs several milliseconds even with PreloadCache warm, and
      * this processor runs once per log record — so a request emitting
      * N log lines pays N parses for the same UA without this cache.
+     *
+     * Ordering relies on PHP arrays preserving insertion order: hits
+     * re-insert at the tail, so array_shift() evicts the least-recently-used.
      *
      * @var array<string, array<array-key, mixed>>
      */
@@ -146,7 +149,12 @@ class RequestProcessor implements ProcessorInterface
         $cacheKey = self::cacheKey($userAgent, $headers);
 
         if (isset(self::$userAgentCache[$cacheKey])) {
-            return self::$userAgentCache[$cacheKey];
+            // Move to tail so it counts as most-recently-used.
+            $cached = self::$userAgentCache[$cacheKey];
+            unset(self::$userAgentCache[$cacheKey]);
+            self::$userAgentCache[$cacheKey] = $cached;
+
+            return $cached;
         }
 
         $clientHints = ClientHints::factory($headers);
@@ -176,6 +184,7 @@ class RequestProcessor implements ProcessorInterface
         ];
 
         if (count(self::$userAgentCache) >= self::CACHE_MAX_ENTRIES) {
+            // Oldest entry sits at the head; hits re-insert at the tail, making this LRU eviction.
             array_shift(self::$userAgentCache);
         }
 
