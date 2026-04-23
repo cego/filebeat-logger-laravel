@@ -4,6 +4,7 @@ namespace Cego\FilebeatLogging;
 
 use JsonException;
 use Cego\FilebeatLoggerFactory;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
@@ -59,6 +60,11 @@ class FilebeatLoggingServiceProvider extends ServiceProvider
         // Rebind the log manager so Log::withContext() / Log::shareContext()
         // also forward into the FrankenPHP request-logs extension. When the
         // extension is absent this is a pure passthrough.
+        //
+        // singleton() drops any previously cached container instance, but the
+        // Log facade has its own resolved-instance cache that needs clearing
+        // so the facade re-resolves through our rebound factory.
         $this->app->singleton('log', fn ($app) => new ForwardingLogManager($app));
+        Log::clearResolvedInstance('log');
     }
 }
