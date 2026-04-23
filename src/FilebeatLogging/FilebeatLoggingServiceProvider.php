@@ -55,5 +55,10 @@ class FilebeatLoggingServiceProvider extends ServiceProvider
         Config::set('logging.channels.deprecations', $deprecationsConfig);
 
         $this->app->bind(ExceptionHandler::class, LoggerExceptionHandler::class);
+
+        // Rebind the log manager so Log::withContext() / Log::shareContext()
+        // also forward into the FrankenPHP request-logs extension. When the
+        // extension is absent this is a pure passthrough.
+        $this->app->singleton('log', fn ($app) => new ForwardingLogManager($app));
     }
 }
