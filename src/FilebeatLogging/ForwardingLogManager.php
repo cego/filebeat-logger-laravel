@@ -51,8 +51,27 @@ class ForwardingLogManager extends LogManager
      */
     private static function forwardToRequestLogs(array $context): void
     {
-        if (function_exists('\\Cego\\RequestLogs\\context')) {
-            \Cego\RequestLogs\context($context);
+        if (! function_exists('\\Cego\\RequestLogs\\context')) {
+            return;
         }
+
+        // The extension converts the array to Go primitives via
+        // frankenphp.GoMap, which silently drops the entire call when it
+        // encounters a PHP object (UuidInterface, Carbon, etc.). Round-trip
+        // through JSON to flatten objects to their scalar representation so
+        // the payload survives. The original $context is untouched, so
+        // parent::shareContext() / standard Monolog handlers still see the
+        // objects and serialize them their own way.
+        $encoded = json_encode($context);
+        if ($encoded === false) {
+            return;
+        }
+
+        $flat = json_decode($encoded, associative: true);
+        if (! is_array($flat)) {
+            return;
+        }
+
+        \Cego\RequestLogs\context($flat);
     }
 }
